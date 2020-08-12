@@ -92,6 +92,10 @@ RCT_EXPORT_METHOD(getOfflineVideoStatuses:(NSString *)accountId policyKey:(NSStr
 RCT_EXPORT_METHOD(getVideoDuration:(NSString *)accountId policyKey:(NSString *)policyKey videoId:(NSString *)videoId resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
     BCOVPlaybackService *playbackService = [[BCOVPlaybackService alloc] initWithAccountId:accountId policyKey:policyKey];
     [playbackService findVideoWithVideoID:videoId parameters:nil completion:^(BCOVVideo *video, NSDictionary *jsonResponse, NSError *error) {
+        if (error) {
+            reject(kErrorCode, error.description, error);
+            return;
+        }
         if (video) {
             resolve(video.properties[kBCOVVideoPropertyKeyDuration]);
         } else {
