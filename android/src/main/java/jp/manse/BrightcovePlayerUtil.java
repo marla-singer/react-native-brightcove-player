@@ -57,6 +57,26 @@ public class BrightcovePlayerUtil extends ReactContextBaseJavaModule implements 
     }
 
     @ReactMethod
+    public void getVideoDuration(String accountId, String policyKey, String videoId, final Promise promise) {
+        Catalog catalog = new Catalog(DefaultEventEmitter.sharedEventEmitter, accountId, policyKey);
+        catalog.findVideoByID(videoId, new VideoListener() {
+            @Override
+            public void onVideo(Video video) {
+                if (video != null) {
+                    promise.resolve(video.getDuration());
+                } else {
+                    promise.resolve(null);
+                }
+            }
+
+            @Override
+            public void onError(String error) {
+                promise.reject(error);
+            }
+        });
+    }
+
+    @ReactMethod
     public void deleteOfflineVideo(String accountId, String policyKey, String videoId, Promise promise) {
         BrightcovePlayerAccount account = this.getBrightcovePlayerAccount(accountId, policyKey);
         if (account == null) {
