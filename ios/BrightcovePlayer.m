@@ -208,21 +208,13 @@
     [self createAirplayIconOverlay];
 
     if (lifecycleEvent.eventType == kBCOVPlaybackSessionLifecycleEventReady) {
-
-        if ([[_playerType uppercaseString] isEqualToString:@"LIVE"]) {
-            _playerView.controlsView.layout = [BCOVPUIControlLayout basicLiveControlLayout];
-        } else if ([[_playerType uppercaseString] isEqualToString:@"DVR"]) {
-            _playerView.controlsView.layout = [BCOVPUIControlLayout basicLiveDVRControlLayout];
-        } else {
-            _playerView.controlsView.layout = [BCOVPUIControlLayout basicVODControlLayout];
-        }
         // Once the controls are set to the layout, define the controls to the state sent to the player
         _playerView.controlsView.hidden = _disableDefaultControl;
 
         UITapGestureRecognizer *seekToTimeTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleSeekToTimeTap:)];
         [_playerView.controlsView.progressSlider addGestureRecognizer:seekToTimeTap];
 
-        _playbackSession = session;
+         _playbackSession = session;
         [self refreshVolume];
         [self refreshBitRate];
 
@@ -245,20 +237,21 @@
         if (self.onPlay) {
             self.onPlay(@{});
         }
+        _playerView.controlsFadingViewVisible = true;
     } else if (lifecycleEvent.eventType == kBCOVPlaybackSessionLifecycleEventPause) {
         if (_playing) {
             _playing = false;
             if (self.onPause) {
                 self.onPause(@{});
             }
-
-            // Hide controls view after pause a video
-            [self refreshControlsView];
+            _playerView.controlsFadingViewVisible = true;
         }
     } else if (lifecycleEvent.eventType == kBCOVPlaybackSessionLifecycleEventEnd) {
         if (self.onEnd) {
             self.onEnd(@{});
         }
+    } else if (lifecycleEvent.eventType == kBCOVPlaybackSessionLifecycleEventPauseRequest) {
+        _playerView.controlsFadingViewVisible = true;
     }
 
      /**
@@ -380,6 +373,8 @@
 
 - (void)handleSeekToTimeTap:(UITapGestureRecognizer *)recognizer {
     if (recognizer.state == UIGestureRecognizerStateEnded) {
+        if (((UISlider*)recognizer.view).highlighted) return;
+
         CGPoint location = [recognizer locationInView:[recognizer.view superview]];
 
         double touchLocation = location.x / _playerView.controlsView.progressSlider.bounds.size.width;
