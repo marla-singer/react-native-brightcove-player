@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { ViewStyle } from 'react-native';
+import { ViewStyle, ScrollViewBase } from 'react-native';
 
 type VideoToken = string;
 
@@ -94,6 +94,12 @@ export namespace BrightcovePlayerUtil {
     policyKey: string
   ): Promise<OfflineVideoStatus[]>;
 
+  export function getVideoDuration(
+    accountId: string,
+    policyKey: string,
+    videoId: string
+  ): Promise<number>;
+
   export function deleteOfflineVideo(
     accountId: string,
     policyKey: string,
@@ -115,4 +121,7 @@ export namespace BrightcovePlayerUtil {
   export function addOfflineNotificationListener(
     callback: (statuses: OfflineVideoStatus[]) => void
   ): Function;
+}
+
+export class ScrollView extends ScrollViewBase {
 }

@@ -89,6 +89,17 @@ RCT_EXPORT_METHOD(getOfflineVideoStatuses:(NSString *)accountId policyKey:(NSStr
     resolve([self collectOfflineVideoStatuses]);
 }
 
+RCT_EXPORT_METHOD(getVideoDuration:(NSString *)accountId policyKey:(NSString *)policyKey videoId:(NSString *)videoId resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+    BCOVPlaybackService *playbackService = [[BCOVPlaybackService alloc] initWithAccountId:accountId policyKey:policyKey];
+    [playbackService findVideoWithVideoID:videoId parameters:nil completion:^(BCOVVideo *video, NSDictionary *jsonResponse, NSError *error) {
+        if (video) {
+            resolve(video.properties[kBCOVVideoPropertyKeyDuration]);
+        } else {
+            resolve(nil);
+        }
+    }];
+}
+
 RCT_EXPORT_METHOD(deleteOfflineVideo:(NSString *)accountId policyKey:(NSString *)policyKey videoToken:(NSString *)videoToken resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
     if (!videoToken) {
         reject(kErrorCode, kErrorMessageDelete, nil);
@@ -153,11 +164,16 @@ RCT_EXPORT_METHOD(getPlaylistWithReferenceId:(NSString *)referenceId accountId:(
         if (!description) {
             description = @"";
         }
+        NSString *referenceId = video.properties[kBCOVVideoPropertyKeyReferenceId];
+        if (!referenceId) {
+            referenceId = @"";
+        }
+
         [videos addObject:
          @{
            kPlaylistAccountId: video.properties[kBCOVVideoPropertyKeyAccountId],
            kPlaylistVideoId: video.properties[kBCOVVideoPropertyKeyId],
-           kPlaylistReferenceId: video.properties[kBCOVVideoPropertyKeyReferenceId],
+           kPlaylistReferenceId: referenceId,
            kPlaylistName: name,
            kPlaylistDescription: description,
            kPlaylistDuration: video.properties[kBCOVVideoPropertyKeyDuration]

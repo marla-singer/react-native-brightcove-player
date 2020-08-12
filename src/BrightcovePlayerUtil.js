@@ -47,6 +47,14 @@ const deleteOfflineVideo = function(accountId, policyKey, videoToken) {
   );
 };
 
+const getVideoDuration = function(accountId, policyKey, videoId) {
+  return NativeModules.BrightcovePlayerUtil.getVideoDuration(
+    accountId,
+    policyKey,
+    videoId
+  );
+};
+
 const getPlaylistWithReferenceId = function(accountId, policyKey, referenceId) {
   return NativeModules.BrightcovePlayerUtil.getPlaylistWithReferenceId(
     referenceId,
@@ -75,6 +83,7 @@ module.exports = {
   requestDownloadVideoWithVideoId,
   getOfflineVideoStatuses,
   deleteOfflineVideo,
+  getVideoDuration,
   getPlaylistWithReferenceId,
   getPlaylistWithPlaylistId,
   addOfflineNotificationListener
