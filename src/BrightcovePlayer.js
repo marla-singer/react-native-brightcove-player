@@ -110,7 +110,6 @@ class BrightcovePlayer extends Component {
 // createAirplayIconOverlay
 BrightcovePlayer.prototype.createAirplayIconOverlay = Platform.select({
   ios: function (prop) {
-    console.log('reached');
     NativeModules.BrightcovePlayerManager.createAirplayIconOverlay(
         ReactNative.findNodeHandle(this)
     );

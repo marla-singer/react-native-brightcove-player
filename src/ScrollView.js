@@ -54,12 +54,10 @@ class ScrollView extends Component {
 		// Clone the component and replace the new properties
 		return React.cloneElement(component, {
 			onEnterFullscreen: (event) => {
-				console.log('Enter full screen');
 				component.props.onEnterFullscreen && component.props.onEnterFullscreen(event);
 				this.onFullScreenChange(true, key);
 			},
 			onExitFullscreen: (event) => {
-				console.log('Exit full screen');
 				component.props.onExitFullscreen && component.props.onExitFullscreen(event);
 				this.onFullScreenChange(false, key);
 			}
