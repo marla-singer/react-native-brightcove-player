@@ -212,6 +212,8 @@ public class BrightcovePlayerView extends RelativeLayout implements LifecycleEve
         eventEmitter.on(EventType.VIDEO_DURATION_CHANGED, new EventListener() {
             @Override
             public void processEvent(Event e) {
+                mediaController.getEventEmitter().emit("progress", e.properties);
+
                 Integer duration = (Integer) e.properties.get(Event.VIDEO_DURATION);
                 WritableMap event = Arguments.createMap();
                 event.putDouble("duration", duration / 1000d);
