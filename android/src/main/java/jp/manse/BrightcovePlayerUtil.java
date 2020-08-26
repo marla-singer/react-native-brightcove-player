@@ -13,6 +13,8 @@ import com.facebook.react.modules.core.DeviceEventManagerModule;
 import java.util.ArrayList;
 import java.util.List;
 
+import jp.manse.util.DefaultEventEmitter;
+
 public class BrightcovePlayerUtil extends ReactContextBaseJavaModule implements BrightcovePlayerAccount.OnBrightcovePlayerAccountListener {
     final private static String CALLBACK_OFFLINE_NOTIFICATION = "OfflineNotification";
     final private static String ERROR_CODE = "error";
